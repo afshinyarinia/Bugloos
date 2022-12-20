@@ -14,7 +14,7 @@ class getApiData extends Command
      *
      * @var string
      */
-    protected $signature = 'bugloos:get-data';
+    protected $signature = 'bugloos:get-data {--path=}';
 
     /**
      * The console command description.
@@ -23,15 +23,15 @@ class getApiData extends Command
      */
     protected $description = 'get some data from third party api';
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
-        $service = new GetDataService(new JsonFormatter(new DummyTransformer()));
-        $data = $service->getData();
-        dd($data);
+        $path = $this->option('path');
+        if($path === null){
+            return $this->error('please provide a path');
+        }
+        $service = new GetDataService();
+        $data = $service->getDataFromFile('test.xml');
+        // save to DB
+        return $this->info('data saved successfully');
     }
 }
